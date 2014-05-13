@@ -43,14 +43,12 @@ Quick Start
           provider => 'rpm' # RPM is the default.
           source   => 'www.foo.com/mirth-1.2.1.rpm' # change the source RPM
           admin_password => 'foo',
-          admin_user => 'admin',
         }
 
 Hiera
 =====
 
     mirthconnect::admin_password: 'admin'
-    mirthconnect::admin_user:     'admin'
     mirthconnect::source:         'www.foo.com/mirth.rpm'
     mirthconnect::provider:       'rpm'
     
