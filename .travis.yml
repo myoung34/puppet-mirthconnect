@@ -1,0 +1,26 @@
+---
+branches:
+  only:
+  - master
+  - dev
+language: ruby
+before_install: 'bundle install'
+script: 'bundle exec rake' #rspec and lint tests
+rvm:
+  - 1.9.3
+  - 2.0.0
+gemfile: .travis/Gemfile
+env:
+  matrix:
+    - PUPPET_GEM_VERSION="~> 2.7.0"
+    - PUPPET_GEM_VERSION="~> 3.0"
+matrix:
+  exclude:
+    - rvm: 1.9.3
+      env: PUPPET_GEM_VERSION="~> 2.7.0"
+      gemfile: .travis/Gemfile
+    - rvm: 2.0.0
+      env: PUPPET_GEM_VERSION="~> 2.7.0"
+      gemfile: .travis/Gemfile
+notifications:
+  email: false
