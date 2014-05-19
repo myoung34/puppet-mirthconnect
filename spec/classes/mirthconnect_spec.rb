@@ -55,7 +55,7 @@ shared_context "mirthconnect" do |admin_password = nil, provider = 'rpm', resour
   it { should contain_file('/tmp/mirthconnect_pw_reset').with(file_pw_reset_params) }
 
   let(:exec_reset_pw_params) { {
-    'command'     => "sleep 30; /opt/mirthconnect/mccommand -u admin -p admin -s /tmp/mirthconnect_pw_reset",
+    'command'     => "sleep 60; /opt/mirthconnect/mccommand -u admin -p admin -s /tmp/mirthconnect_pw_reset",
     'refreshonly' => 'true',
     'subscribe'   => 'File[/tmp/mirthconnect_pw_reset]',
   } }

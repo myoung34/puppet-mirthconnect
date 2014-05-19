@@ -128,7 +128,7 @@ class mirthconnect::mirthconnect (
   }
 
   exec { 'set mirthconnect password':
-    command     => 'sleep 30; /opt/mirthconnect/mccommand -u admin -p admin -s /tmp/mirthconnect_pw_reset',
+    command     => 'sleep 60; /opt/mirthconnect/mccommand -u admin -p admin -s /tmp/mirthconnect_pw_reset',
     path        => $::path,
     refreshonly => true,
     subscribe   => File['/tmp/mirthconnect_pw_reset'],
