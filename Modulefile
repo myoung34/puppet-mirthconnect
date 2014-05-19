@@ -1,5 +1,5 @@
 name         'myoung34-mirthconnect'
-version      '0.0.4'
+version      '0.0.5'
 source       'http://github.com/myoung34/puppet-mirthconnect'
 author       'Marcus Young'
 license      'GPLv3+'
