@@ -1,5 +1,8 @@
+require 'coveralls'
 require 'rspec-puppet'
 require 'yarjuf'
+
+Coveralls.wear!
 
 fixture_path = File.expand_path(File.join(__FILE__, '..', 'fixtures'))
 

@@ -1,6 +1,7 @@
 source 'http://rubygems.org'
 
 group :rake do
+  gem 'coveralls', require: false
   gem 'puppet',                  '>=3.0.1'
   gem 'puppet-blacksmith'
   gem 'puppet-lint',             '>=0.1.12'
