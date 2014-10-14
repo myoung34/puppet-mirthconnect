@@ -9,3 +9,9 @@ PuppetLint.configuration.send("disable_class_parameter_defaults")
 PuppetLint.configuration.send("disable_class_inherits_from_params_class")
 
 task :default => [:spec, :lint]
+
+task :acceptance => [:default] do
+  RSpec::Core::RakeTask.new(:acceptance) do |t|
+      t.pattern = 'spec/acceptance/*_spec.rb'
+  end
+end

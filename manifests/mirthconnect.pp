@@ -11,7 +11,7 @@
 #   The provider to download the MirthConnect package from. Can
 #   Be 'yum' or 'rpm'.
 #
-# [*source*]
+# [*rpm_source*]
 #   The source of the RPM if using the 'rpm' provider.
 #
 # === Examples
@@ -23,8 +23,8 @@
 #  }
 #
 #  class { 'mirthconnect::mirthconnect':
-#    provider => 'rpm' # RPM is the default.
-#    source   => 'www.foo.com/mirth-1.2.1.rpm' # change the source RPM
+#    provider     => 'rpm' # RPM is the default.
+#    rpm_source   => 'www.foo.com/mirth-1.2.1.rpm' # change the source RPM
 #  }
 #
 #  # Install via yum. This must be accessible to the client as a prerequisite via the EULA.
@@ -121,10 +121,10 @@ class mirthconnect::mirthconnect (
   }
 
   file { '/tmp/mirthconnect_pw_reset':
-    ensure      => present,
-    content     => template('mirthconnect/mirthconnect_pw_reset.erb'),
-    replace     => true,
-    subscribe   => Package['mirthconnect'],
+    ensure    => present,
+    content   => template('mirthconnect/mirthconnect_pw_reset.erb'),
+    replace   => true,
+    subscribe => Package['mirthconnect'],
   }
 
   exec { 'set mirthconnect password':
