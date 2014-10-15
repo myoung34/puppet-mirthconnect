@@ -40,8 +40,8 @@ Quick Start
 2. Via RPM (default)
 
         class { 'mirthconnect::mirthconnect':
-          provider => 'rpm' # RPM is the default.
-          source   => 'www.foo.com/mirth-1.2.1.rpm' # change the source RPM
+          provider       => 'rpm' # RPM is the default.
+          rpm_source     => 'www.foo.com/mirth-1.2.1.rpm' # change the source RPM
           admin_password => 'foo',
         }
 
@@ -49,10 +49,19 @@ Hiera
 =====
 
     mirthconnect::admin_password: 'admin'
-    mirthconnect::source:         'www.foo.com/mirth.rpm'
+    mirthconnect::rpm_source:     'www.foo.com/mirth.rpm'
     mirthconnect::provider:       'rpm'
     
 Testing
 =====
 
-TBD
+* Run the default tests (puppet + lint)
+     
+        bundle install 
+        bundle exec rake
+
+* Run the [beaker](https://github.com/puppetlabs/beaker) acceptance tests
+
+Due to licensing issues, I cannot distribute the MirthConnect RPM.
+
+        $ for i in `ls spec/acceptance/*_spec.rb`; do echo $i; MIRTH_YUM_URL=http://my.foo.com/yum/ bundle exec rspec $i | grep -A 150 Destroying\ vagrant\ boxes; done
