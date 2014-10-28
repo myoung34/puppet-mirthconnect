@@ -37,7 +37,7 @@
 #
 # === Authors
 #
-# Marcus Young <marcus.young@icainformatics.com>
+# Marcus Young <myoung34@my.apsu.edu>
 #
 # === Copyright
 #
