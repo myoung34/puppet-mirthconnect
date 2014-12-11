@@ -40,6 +40,12 @@
 #
 class mirthconnect::params {
   $admin_password = 'admin'
+  $db_dbname = ''
+  $db_host = ''
+  $db_pass = ''
+  $db_port = ''
+  $db_provider = 'derby'
+  $db_user = ''
   $provider = 'rpm'
   $rpm_source = 'http://downloads.mirthcorp.com/connect/3.0.2.7140.b1159/mirthconnect-3.0.2.7140.b1159-linux.rpm'
 }

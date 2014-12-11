@@ -22,6 +22,33 @@ Prerequisites
 1. Yum repository with Mirth Connect RPMs available (The EULA does not allow redistribution) if using the 'yum' provider (see usage).
 1. Valid license information
 
+Parameters
+===========
+* *admin_password*
+ * The password to set the admin password to post-install.
+* *rpm_source*
+ * The source of the RPM if using the 'rpm' provider.
+* *provider*
+ * The provider to download the MirthConnect package from. Can Be 'yum' or 'rpm'.
+* *db_dbname*
+ * Optional database name for mirth to use in the mirth.properties file.
+ * Not optional if the *db_provider* is set to anything but 'derby'
+* *db_host*
+ * Optional database hostname for mirth to use in the mirth.properties file.
+ * Not optional if the *db_provider* is set to anything but 'derby'
+* *db_pass*
+ * Optional database password for mirth to use in the mirth.properties file.
+ * Not optional if the *db_provider* is set to anything but 'derby
+* *db_port*
+ * Optional database port for mirth to use in the mirth.properties file.
+ * Not optional if the *db_provider* is set to anything but 'derby'
+* *db_provider*
+ * Optional database provider for mirth to use in the mirth.properties file.
+ *  Currently the only valid strings are 'derby' or 'mysql'
+* *db_user*
+ * Optional database user for mirth to use in the mirth.properties file.
+ * Not optional if the *db_provider* is set to anything but 'derby'
+
 Quick Start
 ===========
 
@@ -48,16 +75,22 @@ Quick Start
 Hiera
 =====
 
-    mirthconnect::admin_password: 'admin'
-    mirthconnect::rpm_source:     'www.foo.com/mirth.rpm'
-    mirthconnect::provider:       'rpm'
-    
+    mirthconnect::admin_password:'admin'
+    mirthconnect::rpm_source:    'www.foo.com/mirth.rpm'
+    mirthconnect::provider:      'rpm'
+    mirthconnect::db_dbname:     'mirthdb'
+    mirthconnect::db_host:       'localhost'
+    mirthconnect::db_pass:       'abc1234'
+    mirthconnect::db_port:       '3306'
+    mirthconnect::db_provider:   'mysql'
+    mirthconnect::db_user:       'mirth'
+
 Testing
 =====
 
 * Run the default tests (puppet + lint)
-     
-        bundle install 
+
+        bundle install
         bundle exec rake
 
 * Run the [beaker](https://github.com/puppetlabs/beaker) acceptance tests

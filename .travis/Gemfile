@@ -2,10 +2,10 @@ source 'http://rubygems.org'
 
 group :development do
   gem 'rake',                    '>=0.9.2.2'
+  gem 'beaker-rspec', :require => false
 end
 
 group :rake do
-  gem 'beaker-rspec'
   gem 'coveralls', require: false
   gem 'puppet-blacksmith'
   gem 'puppet-lint',             '>=0.1.12'

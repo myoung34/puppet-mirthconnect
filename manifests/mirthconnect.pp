@@ -7,6 +7,30 @@
 # [*admin_password*]
 #   The password to set the admin password to post-install.
 #
+# [*db_dbname*]
+#   Optional database name for mirth to use in the mirth.properties file.
+#   Not optional if the *db_provider* is set to anything but 'derby'
+#
+# [*db_host*]
+#   Optional database hostname for mirth to use in the mirth.properties file.
+#   Not optional if the *db_provider* is set to anything but 'derby'
+#
+# [*db_pass*]
+#   Optional database password for mirth to use in the mirth.properties file.
+#   Not optional if the *db_provider* is set to anything but 'derby'
+#
+# [*db_port*]
+#   Optional database port for mirth to use in the mirth.properties file.
+#   Not optional if the *db_provider* is set to anything but 'derby'
+#
+# [*db_provider*]
+#   Optional database provider for mirth to use in the mirth.properties file.
+#   Currently the only valid strings are 'derby' or 'mysql'
+#
+# [*db_user*]
+#   Optional database user for mirth to use in the mirth.properties file.
+#   Not optional if the *db_provider* is set to anything but 'derby'
+#
 # [*provider*]
 #   The provider to download the MirthConnect package from. Can
 #   Be 'yum' or 'rpm'.
@@ -67,9 +91,19 @@
 #
 class mirthconnect::mirthconnect (
   $admin_password = $mirthconnect::admin_password,
+  $db_dbname      = $mirthconnect::params::db_dbname,
+  $db_host        = $mirthconnect::params::db_host,
+  $db_pass        = $mirthconnect::params::db_pass,
+  $db_port        = $mirthconnect::params::db_port,
+  $db_provider    = $mirthconnect::params::db_provider,
+  $db_user        = $mirthconnect::params::db_user,
   $provider       = $mirthconnect::provider,
   $rpm_source     = $mirthconnect::params::rpm_source,
 ) {
+  if $::osfamily != 'RedHat' or $::operatingsystem =~ /Amazon/ {
+    fail('Your operating system is not supported')
+  }
+
   firewall { '106 allow mirthconnect':
     action => accept,
     port   => [
@@ -107,6 +141,40 @@ class mirthconnect::mirthconnect (
   file { '/etc/init.d/mirthconnect':
     ensure => link,
     target => '/opt/mirthconnect/mcservice',
+  }
+  case $db_provider {
+    'derby': {
+    }
+    'mysql': {
+      $properties_file = '/opt/mirthconnect/conf/mirth.properties'
+      exec { 'ConfSetDb':
+        command => "sed -i.bak 's/database \\?=.*/database = mysql/g' ${properties_file}",
+        path    => $::path,
+        unless  => "grep -E 'database\s*=\s*mysql' ${properties_file}",
+        require => Package['mirthconnect'],
+      }
+      exec { 'ConfSetDbUrl':
+        command => "sed -i.bak 's/database.url \\?=.*/database.url = jdbc:mysql:\\/\\/${db_host}:${db_port}\\/${db_dbname}/g' ${properties_file}",
+        path    => $::path,
+        unless  => "grep -E 'database.url\s*=\s*jdbc:mysql://${db_host}:${db_port}/${db_dbname}' ${properties_file}",
+        require => Package['mirthconnect'],
+      }
+      exec { 'ConfSetDbUser':
+        command => "sed -i.bak 's/database.username \\?=.*/database.username = ${db_user}/g' ${properties_file}",
+        path    => $::path,
+        unless  => "grep -E 'database.username\s*=\s*${db_user}' ${properties_file}",
+        require => Package['mirthconnect'],
+      }
+      exec { 'ConfSetDbPass':
+        command => "sed -i.bak 's/database.password \\?=.*/database.password = ${db_pass}/g' ${properties_file}",
+        path    => $::path,
+        unless  => "grep -E 'database.password\s*=\s*${db_pass}' ${properties_file}",
+        require => Package['mirthconnect'],
+      }
+    }
+    default: {
+      fail("Unsupported database provider '${db_provider}' supplied.")
+    }
   }
 
   service { 'mirthconnect':
