@@ -32,11 +32,16 @@
 #   Not optional if the *db_provider* is set to anything but 'derby'
 #
 # [*provider*]
-#   The provider to download the MirthConnect package from. Can
-#   Be 'yum' or 'rpm'.
+#   The provider to download the MirthConnect package from. 
+#   Can be one of 'rpm', 'source', or 'yum'.
 #
 # [*rpm_source*]
-#   The source of the RPM if using the 'rpm' provider.
+#   Optional source of the RPM.
+#   Not optional if using the 'rpm' provider.
+#
+# [*tarball_source*]
+#   Optional source of the source tarball.
+#   Not optional if using the 'source' provider.
 #
 # === Examples
 #
@@ -99,9 +104,13 @@ class mirthconnect::mirthconnect (
   $db_user        = $mirthconnect::params::db_user,
   $provider       = $mirthconnect::provider,
   $rpm_source     = $mirthconnect::params::rpm_source,
+  $tarball_source = $mirthconnect::params::tarball_source,
 ) {
-  if $::osfamily != 'RedHat' or $::operatingsystem =~ /Amazon/ {
+  if $::osfamily != 'RedHat' {
     fail('Your operating system is not supported')
+  }
+  if $::operatingsystem =~ /Amazon/ and $provider != 'source' {
+    fail("AWS Linux does not support package source ${provider}")
   }
 
   firewall { '106 allow mirthconnect':
@@ -118,19 +127,53 @@ class mirthconnect::mirthconnect (
   }
 
   case $provider {
+    'source': {
+      package { 'faraday_middleware':
+          ensure   => 'installed',
+          provider => 'gem',
+      }->
+
+      archive { '/tmp/mirthconnect.tar.gz':
+        ensure       => present,
+        before       => File['/etc/init.d/mirthconnect'],
+        extract      => true,
+        extract_path => '/opt',
+        source       => $tarball_source,
+        cleanup      => true,
+      }->
+
+      file { '/opt/mirthconnect':
+        ensure => link,
+        target => '/opt/Mirth Connect',
+      }
+    }
     'rpm': {
       package { 'mirthconnect':
         ensure   => latest,
+        before   => [
+          File['/opt/mirthconnect'],
+          File['/etc/init.d/mirthconnect'],
+        ],
         provider => rpm,
-        require  => Class['java'],
         source   => $rpm_source,
+      }
+
+      file { '/opt/mirthconnect':
+        ensure => directory,
       }
     }
     'yum': {
       package { 'mirthconnect':
         ensure   => latest,
+        before   => [
+          File['/opt/mirthconnect'],
+          File['/etc/init.d/mirthconnect'],
+        ],
         provider => yum,
-        require  => Class['java'],
+      }
+
+      file { '/opt/mirthconnect':
+        ensure => directory,
       }
     }
     default: {
@@ -142,34 +185,39 @@ class mirthconnect::mirthconnect (
     ensure => link,
     target => '/opt/mirthconnect/mcservice',
   }
+
   case $db_provider {
     'derby': {
     }
     'mysql': {
       $properties_file = '/opt/mirthconnect/conf/mirth.properties'
       exec { 'ConfSetDb':
+        before  => Service['mirthconnect'],
         command => "sed -i.bak 's/database \\?=.*/database = mysql/g' ${properties_file}",
         path    => $::path,
+        require => File['/opt/mirthconnect'],
         unless  => "grep -E 'database\s*=\s*mysql' ${properties_file}",
-        require => Package['mirthconnect'],
       }
       exec { 'ConfSetDbUrl':
+        before  => Service['mirthconnect'],
         command => "sed -i.bak 's/database.url \\?=.*/database.url = jdbc:mysql:\\/\\/${db_host}:${db_port}\\/${db_dbname}/g' ${properties_file}",
         path    => $::path,
+        require => File['/opt/mirthconnect'],
         unless  => "grep -E 'database.url\s*=\s*jdbc:mysql://${db_host}:${db_port}/${db_dbname}' ${properties_file}",
-        require => Package['mirthconnect'],
       }
       exec { 'ConfSetDbUser':
+        before  => Service['mirthconnect'],
         command => "sed -i.bak 's/database.username \\?=.*/database.username = ${db_user}/g' ${properties_file}",
         path    => $::path,
+        require => File['/opt/mirthconnect'],
         unless  => "grep -E 'database.username\s*=\s*${db_user}' ${properties_file}",
-        require => Package['mirthconnect'],
       }
       exec { 'ConfSetDbPass':
+        before  => Service['mirthconnect'],
         command => "sed -i.bak 's/database.password \\?=.*/database.password = ${db_pass}/g' ${properties_file}",
         path    => $::path,
+        require => File['/opt/mirthconnect'],
         unless  => "grep -E 'database.password\s*=\s*${db_pass}' ${properties_file}",
-        require => Package['mirthconnect'],
       }
     }
     default: {
@@ -183,7 +231,7 @@ class mirthconnect::mirthconnect (
     hasrestart => true,
     hasstatus  => true,
     require    => [
-      Package['mirthconnect'],
+      Class['Java'],
       File['/etc/init.d/mirthconnect'],
     ],
   }
@@ -192,7 +240,7 @@ class mirthconnect::mirthconnect (
     ensure    => present,
     content   => template('mirthconnect/mirthconnect_pw_reset.erb'),
     replace   => true,
-    subscribe => Package['mirthconnect'],
+    subscribe => Service['mirthconnect'],
   }
 
   exec { 'set mirthconnect password':
@@ -202,5 +250,5 @@ class mirthconnect::mirthconnect (
     subscribe   => File['/tmp/mirthconnect_pw_reset'],
   }
 
-  Class['java'] -> Package['mirthconnect'] -> Service['mirthconnect'] -> File['/tmp/mirthconnect_pw_reset'] -> Exec['set mirthconnect password']
+  Package <| |> -> Archive <| |> -> Exec <| |>
 }

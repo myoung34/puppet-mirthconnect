@@ -17,6 +17,7 @@
   "dependencies": [
     { "name": "puppetlabs/firewall", "version_requirement": ">= 1.2.0" },
     { "name": "puppetlabs/java", "version_requirement": ">= 1.1.1" }
+    { "name": "nanliu/archive", "version_requirement": ">= 0.1.8" }
     { "name": "puppetlabs/stdlib", "version_requirement": ">= 4.2.1" },
   ]
 }

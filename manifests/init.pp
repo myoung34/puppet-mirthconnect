@@ -32,11 +32,15 @@
 #   Not optional if the *db_provider* is set to anything but 'derby'
 #
 # [*provider*]
-#   The provider to download the MirthConnect package from. Can
-#   Be 'yum' or 'rpm'.
+#   The provider to download the MirthConnect package from. 
+#   Can be one of 'rpm', 'source', or 'yum'.
 #
 # [*rpm_source*]
 #   The source of the RPM if using the 'rpm' provider.
+#
+# [*tarball_source*]
+#   Optional source of the source tarball.
+#   Not optional if using the 'source' provider.
 #
 # === Examples
 #
@@ -97,6 +101,7 @@ class mirthconnect (
   $db_user        = $mirthconnect::params::db_user,
   $provider       = $mirthconnect::params::provider,
   $rpm_source     = $mirthconnect::params::rpm_source,
+  $tarball_source = $mirthconnect::params::tarball_source,
 ) inherits mirthconnect::params {
   class { 'mirthconnect::mirthconnect':
     admin_password => $admin_password,
@@ -108,5 +113,6 @@ class mirthconnect (
     db_user        => $db_user,
     provider       => $provider,
     rpm_source     => $rpm_source,
+    tarball_source => $tarball_source,
   }
 }

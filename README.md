@@ -12,6 +12,9 @@ About
 Supported Versions (tested)
 =================
 ## OS ##
+* AWS Linux
+    * Mirth Connect Base install (Mirth Connect not pre-installed)
+        * 3.0.2.7140.b1159 (from source only)
 * CentOS 6
     * Mirth Connect Base install (Mirth Connect not pre-installed)
         * 3.0.2.7140.b1159
@@ -26,10 +29,6 @@ Parameters
 ===========
 * *admin_password*
  * The password to set the admin password to post-install.
-* *rpm_source*
- * The source of the RPM if using the 'rpm' provider.
-* *provider*
- * The provider to download the MirthConnect package from. Can Be 'yum' or 'rpm'.
 * *db_dbname*
  * Optional database name for mirth to use in the mirth.properties file.
  * Not optional if the *db_provider* is set to anything but 'derby'
@@ -48,6 +47,13 @@ Parameters
 * *db_user*
  * Optional database user for mirth to use in the mirth.properties file.
  * Not optional if the *db_provider* is set to anything but 'derby'
+* *provider*
+ * The provider to download the MirthConnect package from. Can be one of 'rpm', 'source', or 'yum'.
+* *rpm_source*
+ * The source of the RPM if using the 'rpm' provider.
+* *tarball_source*
+ * Optional source of the source tarball.
+ * Not optional if using the 'source' provider.
 
 Quick Start
 ===========
@@ -75,15 +81,16 @@ Quick Start
 Hiera
 =====
 
-    mirthconnect::admin_password:'admin'
-    mirthconnect::rpm_source:    'www.foo.com/mirth.rpm'
-    mirthconnect::provider:      'rpm'
-    mirthconnect::db_dbname:     'mirthdb'
-    mirthconnect::db_host:       'localhost'
-    mirthconnect::db_pass:       'abc1234'
-    mirthconnect::db_port:       '3306'
-    mirthconnect::db_provider:   'mysql'
-    mirthconnect::db_user:       'mirth'
+    mirthconnect::admin_password: 'admin'
+    mirthconnect::db_dbname:      'mirthdb'
+    mirthconnect::db_host:        'localhost'
+    mirthconnect::db_pass:        'abc1234'
+    mirthconnect::db_port:        '3306'
+    mirthconnect::db_provider:    'mysql'
+    mirthconnect::db_user:        'mirth'
+    mirthconnect::provider:       'rpm'
+    mirthconnect::rpm_source:     'www.foo.com/mirth.rpm'
+    mirthconnect::tarball_source: 'www.foo.com/mirth.tar.gz'
 
 Testing
 =====
