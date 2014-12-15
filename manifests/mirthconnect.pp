@@ -107,10 +107,13 @@ class mirthconnect::mirthconnect (
   $tarball_source = $mirthconnect::params::tarball_source,
 ) {
   if $::osfamily != 'RedHat' {
-    fail('Your operating system is not supported')
-  }
-  if $::operatingsystem =~ /Amazon/ and $provider != 'source' {
-    fail("AWS Linux does not support package source ${provider}")
+    if $::osfamily == 'Linux' and $::operatingsystem =~ /Amazon/ {
+      if $provider != 'source' {
+        fail("AWS Linux does not support package source ${provider}")
+      }
+    } else {
+      fail('Your operating system is not supported')
+    }
   }
 
   firewall { '106 allow mirthconnect':
@@ -121,9 +124,12 @@ class mirthconnect::mirthconnect (
     proto  => tcp,
   }
 
-  class { 'java':
-    version => 'present',
-    package => 'java-1.7.0-openjdk',
+  if $::osfamily != 'Linux' {
+    class { 'java':
+      before  => Service['mirthconnect'],
+      version => 'present',
+      package => 'java-1.7.0-openjdk',
+    }
   }
 
   case $provider {
@@ -231,7 +237,6 @@ class mirthconnect::mirthconnect (
     hasrestart => true,
     hasstatus  => true,
     require    => [
-      Class['Java'],
       File['/etc/init.d/mirthconnect'],
     ],
   }
