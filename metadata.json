@@ -1,6 +1,6 @@
 {
   "name": "myoung34-mirthconnect",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "author": "Marcus Young",
   "license": "Licensed under (MIT)",
   "description": "Can be used to set up mirthconnect",
@@ -8,16 +8,34 @@
   "source": "https://github.com/myoung34/puppet-mirthconnect",
   "project_page": "https://github.com/myoung34/puppet-mirthconnect",
   "issues_url": "https://github.com/myoung34/puppet-mirthconnect/issues",
-  "tags": ["hl7", "llp", "mirth", "nextgen", "healthcare"],
+  "tags": [
+    "hl7",
+    "llp",
+    "mirth",
+    "nextgen",
+    "healthcare"
+  ],
   "operatingsystem_support": [
     {
-      "operatingsystem":"RedHat"
+      "operatingsystem": "RedHat"
     }
-   ],
+  ],
   "dependencies": [
-    { "name": "puppetlabs/firewall", "version_requirement": ">= 1.2.0" },
-    { "name": "puppetlabs/java", "version_requirement": ">= 1.1.1" }
-    { "name": "nanliu/archive", "version_requirement": ">= 0.1.8" }
-    { "name": "puppetlabs/stdlib", "version_requirement": ">= 4.2.1" },
+    {
+      "name": "puppetlabs/firewall",
+      "version_requirement": ">= 1.2.0"
+    },
+    {
+      "name": "puppetlabs/java",
+      "version_requirement": ">= 1.1.1"
+    },
+    {
+      "name": "nanliu/archive",
+      "version_requirement": ">= 0.1.8"
+    },
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 4.2.1"
+    }
   ]
 }
