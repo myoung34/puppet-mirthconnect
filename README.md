@@ -1,6 +1,9 @@
 puppet-mirthconnect
 ================
-![Build Status](https://travis-ci.org/myoung34/puppet-mirthconnect.png?branch=master,dev)&nbsp;[![Coverage Status](https://coveralls.io/repos/myoung34/puppet-mirthconnect/badge.png)](https://coveralls.io/r/myoung34/puppet-mirthconnect)&nbsp;[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/myoung34/puppet-mirthconnect/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+![Build Status](https://travis-ci.org/myoung34/puppet-mirthconnect.png?branch=master,dev)&nbsp;
+[![Coverage Status](https://coveralls.io/repos/myoung34/puppet-mirthconnect/badge.png)](https://coveralls.io/r/myoung34/puppet-mirthconnect)&nbsp;
+[![Puppet Forge](https://img.shields.io/puppetforge/v/myoung34/mirthconnect.svg)](https://forge.puppetlabs.com/myoung34/mirthconnect)
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/myoung34/puppet-mirthconnect/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 Puppet Module For Mirthconnect
 
