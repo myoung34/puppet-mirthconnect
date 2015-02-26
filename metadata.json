@@ -22,6 +22,10 @@
   ],
   "dependencies": [
     {
+      "name": "nanliu/archive",
+      "version_requirement": ">= 0.1.8"
+    },
+    {
       "name": "puppetlabs/firewall",
       "version_requirement": ">= 1.2.0"
     },
@@ -30,8 +34,8 @@
       "version_requirement": ">= 1.1.1"
     },
     {
-      "name": "nanliu/archive",
-      "version_requirement": ">= 0.1.8"
+      "name": "puppetlabs/mysql",
+      "version_requirement": ">= 3.0.0"
     },
     {
       "name": "puppetlabs/stdlib",

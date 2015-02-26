@@ -9,6 +9,9 @@ fixtures:
     java: 
       repo: "puppetlabs/java"
       ref:  "1.1.1"
+    mysql: 
+      repo: "puppetlabs/mysql"
+      ref:  "3.0.0"
     stdlib: 
       repo: "puppetlabs/stdlib"
       ref:  "4.2.1"
