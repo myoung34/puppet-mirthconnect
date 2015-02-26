@@ -80,6 +80,43 @@ Quick Start
           rpm_source     => 'www.foo.com/mirth-1.2.1.rpm' # change the source RPM
           admin_password => 'foo',
         }
+        
+3. Using MySQL instead of derby
+
+        $override_options = {
+          'mysqld' => {
+            'lower_case_table_names' => '1' ,
+          }
+        }
+        
+        $mysql_root_password = 'somerootpass'
+        $mirthdbuser = 'mirth'
+        $mirthdbpass = 'mirthdbpass'
+        $mirthdbname = 'mirthdb'
+        
+        class { '::mysql::server':
+          root_password    => $mysql_root_password ,
+          override_options => $override_options ,
+        }->
+        
+        mysql::db { $mirthdbname:
+          user     => $mirthdbuser,
+          password => $mirthdbpass,
+          host     => 'localhost',
+        }
+        
+        class {'mirthconnect':
+          db_host        => 'localhost',
+          db_user        => $mirthdbuser,
+          db_pass        => $mirthdbpass,
+          db_provider    => 'mysql',
+          db_port        => '3306',
+          db_dbname      => $mirthdbname,
+          admin_password => $mirth_admin_password,
+          provider       => 'rpm',
+        }
+        
+        Mysql_grant["${mirthdbuser}@localhost/${mirthdbname}.*"] -> Service['mirthconnect']
 
 Hiera
 =====

@@ -3,8 +3,7 @@ HOSTS:
   centos-65-x64:
     roles:
       - master
-    platform: centos-65-x64-virtualbox-puppet
-    box: centos-65-x64-virtualbox-puppet
-    box_url: http://puppet-vagrant-boxes.puppetlabs.com/centos-65-x64-virtualbox-puppet.box
-    hypervisor: vagrant
-    distmoduledir: /etc/puppet/modules
+    platform: el-6-x86_64
+    box : centos-65-x64-vbox436-nocm
+    box_url : http://puppet-vagrant-boxes.puppetlabs.com/centos-65-x64-virtualbox-nocm.box
+    hypervisor : vagrant
