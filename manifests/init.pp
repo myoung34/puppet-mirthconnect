@@ -31,6 +31,9 @@
 #   Optional database user for mirth to use in the mirth.properties file.
 #   Not optional if the *db_provider* is set to anything but 'derby'
 #
+# [*java_version*]
+#   Optional java version to install. Defaults to 'java-1.8.0-openjdk'
+#
 # [*provider*]
 #   The provider to download the MirthConnect package from. 
 #   Can be one of 'rpm', 'source', or 'yum'.
@@ -99,6 +102,7 @@ class mirthconnect (
   $db_port        = $mirthconnect::params::db_port,
   $db_provider    = $mirthconnect::params::db_provider,
   $db_user        = $mirthconnect::params::db_user,
+  $java_version   = $mirthconnect::params::java_version,
   $provider       = $mirthconnect::params::provider,
   $rpm_source     = $mirthconnect::params::rpm_source,
   $tarball_source = $mirthconnect::params::tarball_source,
@@ -111,6 +115,7 @@ class mirthconnect (
     db_port        => $db_port,
     db_provider    => $db_provider,
     db_user        => $db_user,
+    java_version   => $java_version,
     provider       => $provider,
     rpm_source     => $rpm_source,
     tarball_source => $tarball_source,

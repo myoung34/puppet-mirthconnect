@@ -17,10 +17,10 @@ Supported Versions (tested)
 ## OS ##
 * AWS Linux
     * Mirth Connect Base install (Mirth Connect not pre-installed)
-        * 3.0.2.7140.b1159 (from source only)
+        * 3.4.0.8000.b1959 (from source only)
 * CentOS 6
     * Mirth Connect Base install (Mirth Connect not pre-installed)
-        * 3.0.2.7140.b1159
+        * 3.4.0.8000.b1959
 
 Prerequisites
 =============
@@ -50,6 +50,8 @@ Parameters
 * *db_user*
  * Optional database user for mirth to use in the mirth.properties file.
  * Not optional if the *db_provider* is set to anything but 'derby'
+* *java_version*
+ * Optional java version to install. Defaults to 'java-1.8.0-openjdk'
 * *provider*
  * The provider to download the MirthConnect package from. Can be one of 'rpm', 'source', or 'yum'.
 * *rpm_source*
