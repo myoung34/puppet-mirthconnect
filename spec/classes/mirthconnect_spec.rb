@@ -69,15 +69,17 @@ shared_context "mirthconnect redhat" do |provider, osfamily, operatingsystem|
     'provider' => provider,
   }}
 
-  if osfamily == 'Linux' and operatingsystem == 'Amazon'
-    it {
-      expect {
-        should contain_package('mirthconnect')
-      }.to raise_error(Puppet::Error, /AWS Linux does not support package source/)
-    }
-  else
-    it { should contain_package('mirthconnect').with_ensure('latest').with_provider(provider) }
-    it { should contain_file('/opt/mirthconnect').with_ensure('directory') }
+  if osfamily == 'RedHat' 
+    if operatingsystem == 'Amazon'
+      it {
+        expect {
+          should contain_package('mirthconnect')
+        }.to raise_error(Puppet::Error, /AWS Linux does not support package source/)
+      }
+    else
+      it { should contain_package('mirthconnect').with_ensure('latest').with_provider(provider) }
+      it { should contain_file('/opt/mirthconnect').with_ensure('directory') }
+    end
   end
 end
 
@@ -102,13 +104,11 @@ shared_context "mirthconnect" do |admin_password = nil, osfamily, operatingsyste
   end
 
   if osfamily != 'RedHat'
-    if osfamily != 'Linux' and operatingsystem != 'Amazon'
-      it {
-        expect {
-          should contain_class('mirthconnect')
-        }.to raise_error(Puppet::Error, /Your operating system is not supported/)
-      }
-    end
+    it {
+      expect {
+        should contain_class('mirthconnect')
+      }.to raise_error(Puppet::Error, /Your operating system is not supported/)
+    }
   end
   let(:firewall_params) { {
     'action' => 'accept',
@@ -117,11 +117,8 @@ shared_context "mirthconnect" do |admin_password = nil, osfamily, operatingsyste
   } }
   it { should contain_firewall('106 allow mirthconnect').with(firewall_params) }
 
-  if osfamily != 'Linux'
-    it { should contain_class('java').with_before('Service[mirthconnect]').with_distribution('jdk') }
-  else
-    it { should_not contain_class('java') }
-  end
+  it { should contain_class('java').with_distribution('jdk') }
+
   it { should contain_file('/etc/init.d/mirthconnect').with_ensure('link').with_target('/opt/mirthconnect/mcservice') }
   it { should_not contain_exec('ConfSetDb') }
   it { should_not contain_exec('ConfSetDbUrl') }
@@ -133,9 +130,6 @@ shared_context "mirthconnect" do |admin_password = nil, osfamily, operatingsyste
     'enable'     => 'true',
     'hasrestart' => 'true',
     'hasstatus'  => 'true',
-    'require'    => [
-      'File[/etc/init.d/mirthconnect]',
-    ]
   } }
   it { should contain_service('mirthconnect').with(service_params) }
 
@@ -158,58 +152,58 @@ end
 describe 'mirthconnect' do
   describe 'AWS Linux' do
     context 'rpm provider' do
-      it_should_behave_like "mirthconnect redhat", 'rpm', 'Linux', 'Amazon'
-      it_should_behave_like "mirthconnect", 'bar', 'Linux', 'Amazon'
+      it_should_behave_like "mirthconnect redhat", 'rpm', 'RedHat', 'Amazon'
+      it_should_behave_like "mirthconnect", 'bar', 'RedHat', 'Amazon'
 
       describe 'database' do
         context 'derby db' do
-          it_should_behave_like 'database', 'Linux', 'Amazon', 'derby'
+          it_should_behave_like 'database', 'RedHat', 'Amazon', 'derby'
         end
   
         context 'mysql db' do
-          it_should_behave_like 'database', 'Linux', 'Amazon', 'mysql', 'localhost', '3306', 'dbusername', 'secure123', 'mirthdb'
+          it_should_behave_like 'database', 'RedHat', 'Amazon', 'mysql', 'localhost', '3306', 'dbusername', 'secure123', 'mirthdb'
         end
   
         context 'unknown db' do
-          it_should_behave_like 'database', 'Linux', 'Amazon', 'watdb'
+          it_should_behave_like 'database', 'RedHat', 'Amazon', 'watdb'
         end
       end
     end
 
     context 'yum provider' do
-      it_should_behave_like "mirthconnect redhat", 'yum', 'Linux', 'Amazon'
-      it_should_behave_like "mirthconnect", 'bar', 'Linux', 'Amazon'
+      it_should_behave_like "mirthconnect redhat", 'yum', 'RedHat', 'Amazon'
+      it_should_behave_like "mirthconnect", 'bar', 'RedHat', 'Amazon'
 
       describe 'database' do
         context 'derby db' do
-          it_should_behave_like 'database', 'Linux', 'Amazon', 'derby'
+          it_should_behave_like 'database', 'RedHat', 'Amazon', 'derby'
         end
   
         context 'mysql db' do
-          it_should_behave_like 'database', 'Linux', 'Amazon', 'mysql', 'localhost', '3306', 'dbusername', 'secure123', 'mirthdb'
+          it_should_behave_like 'database', 'RedHat', 'Amazon', 'mysql', 'localhost', '3306', 'dbusername', 'secure123', 'mirthdb'
         end
   
         context 'unknown db' do
-          it_should_behave_like 'database', 'Linux', 'Amazon', 'watdb'
+          it_should_behave_like 'database', 'RedHat', 'Amazon', 'watdb'
         end
       end
     end
   
     context 'source provider' do
-      it_should_behave_like "mirthconnect source", 'Linux', 'Amazon'
-      it_should_behave_like "mirthconnect", 'bar', 'Linux', 'Amazon'
+      it_should_behave_like "mirthconnect source", 'RedHat', 'Amazon'
+      it_should_behave_like "mirthconnect", 'bar', 'RedHat', 'Amazon'
 
       describe 'database' do
         context 'derby db' do
-          it_should_behave_like 'database', 'Linux', 'Amazon', 'derby'
+          it_should_behave_like 'database', 'RedHat', 'Amazon', 'derby'
         end
   
         context 'mysql db' do
-          it_should_behave_like 'database', 'Linux', 'Amazon', 'mysql', 'localhost', '3306', 'dbusername', 'secure123', 'mirthdb'
+          it_should_behave_like 'database', 'RedHat', 'Amazon', 'mysql', 'localhost', '3306', 'dbusername', 'secure123', 'mirthdb'
         end
   
         context 'unknown db' do
-          it_should_behave_like 'database', 'Linux', 'Amazon', 'watdb'
+          it_should_behave_like 'database', 'RedHat', 'Amazon', 'watdb'
         end
       end
     end

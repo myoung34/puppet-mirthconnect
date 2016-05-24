@@ -46,7 +46,8 @@ class mirthconnect::params {
   $db_port = ''
   $db_provider = 'derby'
   $db_user = ''
+  $java_version = 'java-1.8.0-openjdk'
   $provider = 'rpm'
-  $rpm_source = 'http://downloads.mirthcorp.com/connect/3.0.2.7140.b1159/mirthconnect-3.0.2.7140.b1159-linux.rpm'
-  $tarball_source = 'http://downloads.mirthcorp.com/connect/3.0.2.7140.b1159/mirthconnect-3.0.2.7140.b1159-unix.tar.gz'
+  $rpm_source = 'http://downloads.mirthcorp.com/connect/3.4.0.8000.b1959/mirthconnect-3.4.0.8000.b1959-linux.rpm'
+  $tarball_source = 'http://downloads.mirthcorp.com/connect/3.4.0.8000.b1959/mirthconnect-3.4.0.8000.b1959-unix.tar.gz'
 }

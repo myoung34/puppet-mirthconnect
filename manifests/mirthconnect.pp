@@ -31,8 +31,11 @@
 #   Optional database user for mirth to use in the mirth.properties file.
 #   Not optional if the *db_provider* is set to anything but 'derby'
 #
+# [*java_version*]
+#   Optional java version to install. Defaults to 'java-1.8.0-openjdk'
+#
 # [*provider*]
-#   The provider to download the MirthConnect package from. 
+#   The provider to download the MirthConnect package from.
 #   Can be one of 'rpm', 'source', or 'yum'.
 #
 # [*rpm_source*]
@@ -102,18 +105,24 @@ class mirthconnect::mirthconnect (
   $db_port        = $mirthconnect::params::db_port,
   $db_provider    = $mirthconnect::params::db_provider,
   $db_user        = $mirthconnect::params::db_user,
+  $java_version   = $mirthconnect::params::java_version,
   $provider       = $mirthconnect::provider,
   $rpm_source     = $mirthconnect::params::rpm_source,
   $tarball_source = $mirthconnect::params::tarball_source,
 ) {
-  if $::osfamily != 'RedHat' {
-    if $::osfamily == 'Linux' and $::operatingsystem =~ /Amazon/ {
+  if $::osfamily == 'RedHat' {
+    if $::operatingsystem =~ /Amazon/ {
       if $provider != 'source' {
         fail("AWS Linux does not support package source ${provider}")
       }
-    } else {
-      fail('Your operating system is not supported')
     }
+  } else {
+    fail('Your operating system is not supported')
+  }
+
+  class { 'java':
+    version => 'present',
+    package => $java_version,
   }
 
   firewall { '106 allow mirthconnect':
@@ -122,14 +131,6 @@ class mirthconnect::mirthconnect (
       8080, 8443
     ],
     proto  => tcp,
-  }
-
-  if $::osfamily != 'Linux' {
-    class { 'java':
-      before  => Service['mirthconnect'],
-      version => 'present',
-      package => 'java-1.7.0-openjdk',
-    }
   }
 
   case $provider {
@@ -161,6 +162,9 @@ class mirthconnect::mirthconnect (
           File['/etc/init.d/mirthconnect'],
         ],
         provider => rpm,
+        require  => [
+          Class['java'],
+        ],
         source   => $rpm_source,
       }
 
@@ -174,6 +178,9 @@ class mirthconnect::mirthconnect (
         before   => [
           File['/opt/mirthconnect'],
           File['/etc/init.d/mirthconnect'],
+        ],
+        require  => [
+          Class['java'],
         ],
         provider => yum,
       }
