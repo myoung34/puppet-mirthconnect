@@ -142,7 +142,7 @@ shared_context "mirthconnect" do |admin_password = nil, osfamily, operatingsyste
   it { should contain_file('/tmp/mirthconnect_pw_reset').with(file_pw_reset_params) }
 
   let(:exec_reset_pw_params) { {
-    'command'     => "sleep 60; /opt/mirthconnect/mccommand -u admin -p admin -s /tmp/mirthconnect_pw_reset",
+    'command'     => 'sleep 60; /opt/mirthconnect/mccommand -u admin -p admin -s /tmp/mirthconnect_pw_reset; mysql -uroot mirthdb -e "insert into person_preference (PERSON_ID,NAME,VALUE) values (1,\'firstlogin\',\'false\');"',
     'refreshonly' => 'true',
     'subscribe'   => 'File[/tmp/mirthconnect_pw_reset]',
   } }
