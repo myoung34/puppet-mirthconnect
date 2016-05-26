@@ -171,6 +171,23 @@ class mirthconnect::mirthconnect (
       file { '/opt/mirthconnect':
         ensure => directory,
       }
+
+      if($rpm_source =~ /3.4.0.8000.b1959/) {
+        file { '/tmp/mirth_340_fix.sh':
+          ensure  => present,
+          before  => Exec['set mirthconnect password'],
+          content => template('mirthconnect/mirth_340_fix.sh.erb'),
+          require => Package['mirthconnect'],
+        }
+
+        exec { 'fix mirth 3.4.0 install':
+          before  => Exec['set mirthconnect password'],
+          command => 'bash /tmp/mirth_340_fix.sh',
+          creates => '/opt/mirthconnect/cli-lib/jersey-common-2.22.1.jar',
+          path    => $::path,
+          require => File['/tmp/mirth_340_fix.sh'],
+        }
+      }
     }
     'yum': {
       package { 'mirthconnect':
