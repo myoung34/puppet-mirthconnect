@@ -1,19 +1,14 @@
 fixtures:
   forge_modules:
     archive:
-      repo: "nanliu/archive"
-      ref: "0.1.8"
+      repo: 'puppet/archive'
     firewall: 
-      repo: "puppetlabs/firewall"
-      ref:  "1.2.0"
+      repo: 'puppetlabs/firewall'
     java: 
-      repo: "puppetlabs/java"
-      ref:  "1.1.1"
+      repo: 'puppetlabs/java'
     mysql: 
-      repo: "puppetlabs/mysql"
-      ref:  "3.0.0"
+      repo: 'puppetlabs/mysql'
     stdlib: 
-      repo: "puppetlabs/stdlib"
-      ref:  "4.2.1"
+      repo: 'puppetlabs/stdlib'
   symlinks:
       mirthconnect: "#{source_dir}"
