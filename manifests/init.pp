@@ -107,7 +107,7 @@ class mirthconnect (
   $rpm_source     = $mirthconnect::params::rpm_source,
   $tarball_source = $mirthconnect::params::tarball_source,
 ) inherits mirthconnect::params {
-  class { 'mirthconnect::mirthconnect':
+  class { '::mirthconnect::mirthconnect':
     admin_password => $admin_password,
     db_dbname      => $db_dbname,
     db_host        => $db_host,

@@ -120,7 +120,7 @@ class mirthconnect::mirthconnect (
     fail('Your operating system is not supported')
   }
 
-  class { 'java':
+  class { '::java':
     version => 'present',
     package => $java_version,
   }
@@ -128,7 +128,8 @@ class mirthconnect::mirthconnect (
   firewall { '106 allow mirthconnect':
     action => accept,
     port   => [
-      8080, 8443
+      8080,
+      8443,
     ],
     proto  => tcp,
   }
@@ -138,18 +139,18 @@ class mirthconnect::mirthconnect (
       package { 'faraday_middleware':
           ensure   => 'installed',
           provider => 'gem',
-      }->
+      }
 
-      archive { '/tmp/mirthconnect.tar.gz':
+      ->archive { '/tmp/mirthconnect.tar.gz':
         ensure       => present,
         before       => File['/etc/init.d/mirthconnect'],
         extract      => true,
         extract_path => '/opt',
         source       => $tarball_source,
         cleanup      => true,
-      }->
+      }
 
-      file { '/opt/mirthconnect':
+      ->file { '/opt/mirthconnect':
         ensure => link,
         target => '/opt/Mirth Connect',
       }

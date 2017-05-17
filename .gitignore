@@ -3,3 +3,4 @@
 /log
 /coverage
 /spec/fixtures
+Gemfile.lock
